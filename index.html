@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        }
+    </style>
+
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]} });
+    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+</head>
+
+<body>
+
+
+
+
+    <h1>String Diagram Mosaics</h1>
+    <div id="elm-app-is-loaded-here"></div>
+
+    <script src="elm.js"></script>
+    <script>
+        var app = Elm.Main.init({
+            node: document.getElementById("elm-app-is-loaded-here")
+        });
+    </script>
+
+
+
+
+    <div>
+
+
+
+        <p>
+            String Diagram Mosaics is an app for interacting with string diagrams. It is inspired by a paper of <a href="https://arxiv.org/abs/0805.0339">Lomonaco and Kauffman</a>. In it they define a mosaic tiling system for studying quantum knots. This
+            consists of a set of tiles and certain rewrite rules, which are the analogs of Reidemeister moves from knot theory. It was conjectured, and latter proven by <a href="https://arxiv.org/abs/0811.0710">Kuriya</a> that this system fully captures
+            tame knot theory. Here we define system in the same spirit, which is meant to be a presentation of a monoidal category of some sort.
+        </p>
+
+        <h2>How to use</h2>
+        Click and drag tiles from top. Click triangles to add/remove rows and columns. Click to apply a rule. A white rectangle indicates a selection on which the rule is applied. It also depends on which quadrant of the tile the mouse is on. For more, see description
+        below.
+
+        <h2>Theory</h2>
+        <p>
+            Just definitions, no results yet. Our tiling system consists of:
+            <li>a set $T$ of 11 square tiles, labeled $t_0$ to $t_{10}$ as shown below,</li>
+            <div align="center">
+                <svg width="550" height="50"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(100,0)"><g transform="rotate(90,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g></g><g transform="translate(150,0)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(200,0)">
+                    <g transform="rotate(90,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(250,0)">
+                    <g transform="rotate(180,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(300,0)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(350,0)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                        <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(400,0)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                            <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(450,0)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(500,0)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                </svg>
+            </div>
+
+            <li>a set $C=\{0,1,2\}$ which encodes the type of connection a tile may have on a boundary,</li>
+
+            <li>and four "airity" maps $\alpha_i:T \to C$, where $i \in \{u,d,l,r\}$, respectively denoting the connection type of the up, down, left and right boundaries of a tile.</li>
+
+            Here, $0 \in C$ means no connection point on a boundary, and $1$ and $2$ represent thin and thick lines respectively. These are meant to represent respectively the objects and morphisms of a monoidal category.
+        </p>
+
+
+
+
+
+        <p>
+            A $(n,m)-$mosaic $M$ is an $n \times m$ matrix $M$ of tiles, subject to the following conditions.
+
+            <li> It is well connected, i.e. for all $i,j$, $$ \alpha_u(M_{i,j}) = \alpha_d(M_{i-1,j})$$ $$ \alpha_l(M_{i,j}) = \alpha_r(M_{i,j-1})$$.
+            </li>
+
+            <li> It has no points on left and right boundaries. $$\alpha_l(M_{i,1}) = \alpha_r(M_{i,n}) = 0$$
+            </li>
+
+            <li> It is progressive, i.e. if $M_{i,j}=t_5$ and $M_{i,j+k}=t_6$ for some $k$, then there exists $l$ between $j$ and $j+k$ such that $M_{i,j}=t_3$, and likewise if $M_{i,j}=t_4$ and $M_{i,j+k}=t_3$ for some $k$, then there exists $l$ between $j$
+                and $j+k$ such that $M_{i,j}=t_6$.
+            </li>
+
+            The last condition ensures that there are no cups and caps. We will only focus on bare monoidal categories. Let $\mathbb{M}_{n,m}$ be the set of all $(n,m)-$mosaics.
+        </p>
+
+
+        <p>
+            We now describe certain local rewrite rules. Consider the following.
+
+            <div align="center">
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(180,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                </svg>
+                $\leftrightarrow_{(i,j)}$
+                <svg width="100" height="100"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(0,50)"><g transform="rotate(90,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g></g><g transform="translate(50,50)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </svg>
+                $:\mathbb{M}_{n,m} \to \mathbb{M}_{n,m}$
+            </div>
+
+            This rule applied to an $n \times m$ matrix replaces the $2 \times 2$ submatrix located at $i,j$ with the right hand side if it matches the left hand side, or with the left hand side if it matches the right hand side, otherwise leaves the matrix unchanged.
+            Similarly we have the following.
+
+
+            <div align="center">
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(90,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g></g><g transform="translate(50,0)"><g transform="rotate(270,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </svg>
+                $\leftrightarrow$
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(270,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                </svg>
+            </div>
+
+
+            <div align="center">
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </svg>
+                $\leftrightarrow$
+                <svg width="100" height="100"><g transform="translate(0,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,50)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(50,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g></svg>
+            </div>
+
+            <div align="center">
+                <svg width="100" height="100"><g transform="translate(0,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,50)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                </svg>
+                $\leftrightarrow$
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line>
+                    </g>
+                </g>
+                </svg>
+            </div>
+
+            <div align="center">
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(180,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g transform="rotate(90,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                </svg>
+                $\leftrightarrow$
+                <svg width="100" height="100"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g transform="rotate(180,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g transform="rotate(90,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </svg>
+            </div>
+
+            <div align="center">
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(270,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                </svg>
+                $\leftrightarrow$
+                <svg width="100" height="100"><g transform="translate(0,0)"><g transform="rotate(90,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g></g><g transform="translate(50,0)"><g transform="rotate(270,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g transform="rotate(90,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </svg>
+            </div>
+
+            We also allow all horizontal and vertical reflections of these which respect the requirements of mosaics. Some of these may be redundant. We have the following rules on the upper boundary, along with their horizontal reflections.
+
+            <div align="center">
+                <svg width="100" height="50"><g transform="translate(0,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g></svg>                $\leftrightarrow$
+                <svg width="100" height="50"><g transform="translate(0,0)"><g transform="rotate(180,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </svg>
+            </div>
+
+            <div align="center">
+                <svg width="100" height="50"><g transform="translate(0,0)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g transform="rotate(90,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line>
+                        </g>
+                    </g>
+                </g>
+                </svg>
+                $\leftrightarrow$
+                <svg width="100" height="50"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                </svg>
+            </div>
+
+            Likewise, we have their vertical reflection moves on lower boundary. The following rule involves morphism tiles.
+
+
+            <div align="center">
+                <svg width="100" height="150"><g transform="translate(0,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,50)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g><g transform="translate(50,50)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(0,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,100)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g></svg>                $\leftrightarrow$
+                <svg width="100" height="150"><g transform="translate(0,0)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(50,0)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                            <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                        <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(0,100)">
+                    <g transform="rotate(90,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(50,100)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                </svg>
+            </div>
+
+            We need the following family of cyclic rules that allows us to shift the morphisms around (Not yet implemented). The submatrix involved here spans the width of the morphism.
+
+            <div align="center">
+                <svg width="350" height="150"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(150,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(250,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(300,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,50)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect></g></g><g transform="translate(100,50)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g><g transform="translate(150,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,50)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(250,50)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(300,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(150,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,100)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(250,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(300,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g></svg>                $\rightarrow$
+                <svg width="350" height="150"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect></g></g><g transform="translate(100,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g><g transform="translate(150,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,0)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(250,0)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(300,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(150,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,50)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(250,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(300,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(150,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,100)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(250,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(300,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g></svg>                $\rightarrow$
+                <svg width="350" height="150"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,0)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(150,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(250,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(300,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,50)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="50" stroke="#bc986a" stroke-width="2"></line></g></g><g transform="translate(150,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(250,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(300,50)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(0,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,100)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect></g></g><g transform="translate(100,100)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g><g transform="translate(150,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(200,100)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line><rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(250,100)"><g transform="rotate(180,25,25)"><g><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect></g></g></g><g transform="translate(300,100)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g></svg>                $\rightarrow$
+                <svg width="350" height="150"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g transform="rotate(180,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(100,0)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(150,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(200,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(250,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(300,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                        <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(100,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(150,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                            <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(200,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(250,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(300,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(0,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(50,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(100,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(150,100)">
+                    <g transform="rotate(90,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(200,100)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(250,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(300,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                </svg>
+                $\rightarrow$
+                <svg width="350" height="150"><g transform="translate(0,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(50,0)"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g></g><g transform="translate(100,0)"><g transform="rotate(90,25,25)"><g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                </g>
+                <g transform="translate(150,0)">
+                    <g transform="rotate(270,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(200,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(250,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(300,0)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(0,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(50,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(100,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(150,50)">
+                    <g>
+                        <g>
+                            <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                        </g>
+                        <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                        <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                    </g>
+                </g>
+                <g transform="translate(200,50)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(250,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <line x1="25" y1="0" x2="25" y2="25" stroke="#bc986a" stroke-width="2"></line>
+                            <rect x="0" y="20" width="50" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(300,50)">
+                    <g transform="rotate(180,25,25)">
+                        <g>
+                            <g>
+                                <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                            </g>
+                            <rect x="25" y="20" width="25" height="10" fill="#8d8741"></rect>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(0,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(50,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(100,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(150,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                <g transform="translate(200,100)">
+                    <g transform="rotate(180,25,25)">
+                        <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                    </g>
+                </g>
+                <g transform="translate(250,100)">
+                    <g><svg width="50" height="50"><g><rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect></g><circle cx="0" cy="0" r="25" stroke="#bc986a" stroke-width="2" fill="none"></circle></svg></g>
+                </g>
+                <g transform="translate(300,100)">
+                    <g>
+                        <rect width="50" height="50" fill="#fbeec1" stroke="#659dbd" stroke-width="2"></rect>
+                    </g>
+                </g>
+                </svg>
+            </div>
+
+
+            Finally, we allow addition and removal of rows and columns. Adding a column of tile $t_0$ gives us an embedding of $\mathbb{M}_{n,m} \hookrightarrow \mathbb{M}_{n,m+1}$. An embedding $\mathbb{M}_{n,m} \hookrightarrow \mathbb{M}_{n+1,m}$ can be defined
+            as adding a row of tiles that are $t_0$ if there is no connection point above it, and $t_1$ otherwise.
+
+        </p>
+
+
+
+        <h2>TODO</h2>
+        <li>Soundness, valuations, etc.</li>
+        <li>Composing morphisms, i.e. stacking</li>
+        <li>Consider other categories</li>
+        <li>...</li>
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
