@@ -1,5 +1,5 @@
 # string-diagram-mosaics
-Playing with string diagrams. See [index.html](index.html) for more.
+Playing with string diagrams. See [https://ronaldpalmeida.github.io/string-diagram-mosaics/](https://ronaldpalmeida.github.io/string-diagram-mosaics/) for more.
 
 To build elm code, install elm and do:
 
